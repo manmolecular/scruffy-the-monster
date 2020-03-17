@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from database import Base
-from defaults import UserDefaults, MonsterDefaults
+from db.database import Base
+from config.defaults import UserDefaults, MonsterDefaults
 
 
 class User(Base):

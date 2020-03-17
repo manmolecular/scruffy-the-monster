@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List
 
-from defaults import UserDefaults, MonsterDefaults
+from config.defaults import UserDefaults, MonsterDefaults
 
 
 class UserBase(BaseModel):

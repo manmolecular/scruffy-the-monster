@@ -9,11 +9,10 @@ from aiohttp_security import (
 )
 from aiohttp_security.abc import AbstractAuthorizationPolicy
 from aiohttp_swagger import *
-from database import engine
-import models
-import crud
-import schemas
-from defaults import RaceConditionRate
+from db.database import engine
+from db import models
+from handlers import crud, schemas
+from config.defaults import RaceConditionRate
 from asyncio import sleep
 from json.decoder import JSONDecodeError
 
@@ -199,7 +198,7 @@ async def make_app():
 
     setup_swagger(
         app,
-        swagger_from_file="swagger.yaml",
+        swagger_from_file="data/swagger/swagger.yml",
         swagger_url="/doc",
         ui_version=3,
     )

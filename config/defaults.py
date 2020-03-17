@@ -1,5 +1,5 @@
 class Config:
-    SQLALCHEMY_URL: str = "sqlite:///./app.db"
+    SQLALCHEMY_URL: str = "sqlite:///./data/database/app.db"
 
 
 class RaceConditionRate:
