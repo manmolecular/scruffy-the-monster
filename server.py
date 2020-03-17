@@ -15,6 +15,8 @@ from handlers import crud, schemas
 from config.defaults import RaceConditionRate
 from asyncio import sleep
 from json.decoder import JSONDecodeError
+from pathlib import Path
+from config.defaults import Config
 
 routes = web.RouteTableDef()
 
@@ -244,7 +246,12 @@ async def main(request):
     raise web.HTTPFound("/doc")
 
 
+async def _create_db_path():
+    Path(Config.SQLALCHEMY_URL.replace("sqlite:///", "")).parent.mkdir(parents=True, exist_ok=True)
+
+
 async def make_app():
+    await _create_db_path()
     models.Base.metadata.create_all(bind=engine)
     middleware = session_middleware(SimpleCookieStorage())
     app = web.Application(middlewares=[middleware])

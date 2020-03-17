@@ -7,6 +7,5 @@ services:
       target: scruffy-the-monster-build
       dockerfile: Dockerfile
     image: scruffy/scruffy:1.0
-    container_name: scruffy_RC
     ports:
-      - "9000:9000"
+      - "9000-9005:9000"
