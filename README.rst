@@ -17,8 +17,12 @@ Installation
 ------------
 Run:
 
+.. code-block:: RST
+
     docker-compose up
 
 Open in browser:
+
+.. code-block:: RST
 
     http://localhost:9000/
