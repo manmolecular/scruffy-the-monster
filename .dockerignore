@@ -4,5 +4,7 @@
 !db
 !config
 !handlers
-!requirements.txt
+!poetry.lock
+!poetry.toml
+!pyproject.toml
 !server.py
