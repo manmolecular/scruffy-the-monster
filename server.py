@@ -35,19 +35,31 @@ async def register(request):
     try:
         data = await request.json()
     except JSONDecodeError as invalid_json:
-        return web.json_response({"status": "error", "msg": "Request body is invalid. Use JSON with username/password"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Request body is invalid. Use JSON with username/password",
+            }
+        )
     except Exception as unexp_err:
         return web.json_response({"status": "error", "msg": "Unexpected error"})
 
     try:
         user_schema = schemas.UserCreate(**data)
     except Exception as invalid_schema:
-        return web.json_response({"status": "error", "msg": "Username and password must be between 5 and 10 chars"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Username and password must be between 5 and 10 chars",
+            }
+        )
 
     try:
         return web.json_response(crud.create_user(user_schema))
     except Exception as create_user_err:
-        return web.json_response({"status": "error", "msg": "Can not create user, unexpected error"})
+        return web.json_response(
+            {"status": "error", "msg": "Can not create user, unexpected error"}
+        )
 
 
 @routes.post("/login")
@@ -55,7 +67,12 @@ async def login(request):
     try:
         data = await request.json()
     except JSONDecodeError as invalid_json:
-        return web.json_response({"status": "error", "msg": "Request body is invalid. Use JSON with username/password"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Request body is invalid. Use JSON with username/password",
+            }
+        )
     except Exception as unexp_err:
         return web.json_response({"status": "error", "msg": "Unexpected error"})
 
@@ -67,7 +84,9 @@ async def login(request):
     try:
         success_login = crud.check_user_credentials(user_schema)
     except Exception as login_err:
-        return web.json_response({"status": "error", "msg": "Can not login, unexpected error"})
+        return web.json_response(
+            {"status": "error", "msg": "Can not login, unexpected error"}
+        )
 
     if not success_login:
         return web.json_response(
@@ -77,7 +96,12 @@ async def login(request):
     try:
         await remember(request, web.HTTPFound("/"), data.get("username"))
     except Exception as remember_user_err:
-        return web.json_response({"status": "error", "msg": "Can not remember user, problems with authentication"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Can not remember user, problems with authentication",
+            }
+        )
     raise web.HTTPFound("/monster")
 
 
@@ -89,8 +113,15 @@ async def get_monster(request):
     try:
         crud.create_user_monster(monster=schemas.MonsterCreate(), user_id=user_id)
     except Exception as create_monster_err:
-        return web.json_response({"status": "error", "msg": "Can not create Monster for user! Try one more time?"})
-    return web.json_response({"status": "success", "msg": "Arrrgh! Monster attacks you!"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Can not create Monster for user! Try one more time?",
+            }
+        )
+    return web.json_response(
+        {"status": "success", "msg": "Arrrgh! Monster attacks you!"}
+    )
 
 
 @routes.get("/status", allow_head=False)
@@ -105,7 +136,12 @@ async def status(request):
         monster_stats = crud.get_monster_stats(user_id)
         MONSTERS.update({monster_stats.get("id"): monster_stats.get("health")})
     except:
-        return web.json_response({"status": "error", "msg": "Everything is calm... Maybe you can find some monsters?"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Everything is calm... Maybe you can find some monsters?",
+            }
+        )
     return web.json_response({"user_stats": user_stats, "monster_stats": monster_stats})
 
 
@@ -118,8 +154,15 @@ async def flush(request):
         del USERS[user_id]
         del MONSTERS[crud.get_monster_id(user_id)]
     except Exception as del_err:
-        return web.json_response({"status": "error", "msg": "Can not clean-up after your monster... Or after you"})
-    return web.json_response({"status": "success", "msg": "Your temporary information cleaned-up"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Can not clean-up after your monster... Or after you",
+            }
+        )
+    return web.json_response(
+        {"status": "success", "msg": "Your temporary information cleaned-up"}
+    )
 
 
 @routes.get("/logout", allow_head=False)
@@ -128,7 +171,12 @@ async def logout(request):
     try:
         await forget(request, web.HTTPFound("/"))
     except Exception as forget_user_err:
-        return web.json_response({"status": "error", "msg": "This user is unforgetable... No, really. Can not logout"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "This user is unforgetable... No, really. Can not logout",
+            }
+        )
     raise web.json_response({"status": "success", "msg": "You are logged out"})
 
 
@@ -142,7 +190,9 @@ async def hit(request):
         monster_stats = crud.get_monster_stats(user_id)
         user_stats = crud.get_user_stats(user_id)
     except Exception as get_stats_err:
-        return web.json_response({"status": "error", "msg": "Can not get stats - you are dead or alive!"})
+        return web.json_response(
+            {"status": "error", "msg": "Can not get stats - you are dead or alive!"}
+        )
 
     monster_health = MONSTERS.get(monster_stats.get("id")) or monster_stats.get(
         "health"
@@ -162,12 +212,19 @@ async def hit(request):
         USERS.update({user_stats.get("id"): user_health})
         await sleep(RaceConditionRate.ATTACK_TIME)
     except Exception as update_health_err:
-        return web.json_response({"status": "error", "msg": "Some hits are missed! Take a breath, warrior!"})
+        return web.json_response(
+            {"status": "error", "msg": "Some hits are missed! Take a breath, warrior!"}
+        )
 
     try:
         crud.update_health_stats(user_id, monster_health, user_health)
     except:
-        return web.json_response({"status": "error", "msg": "Can not save new hits-stats in db. You are too fast"})
+        return web.json_response(
+            {
+                "status": "error",
+                "msg": "Can not save new hits-stats in db. You are too fast",
+            }
+        )
 
     if monster_health == 0 and user_health > 0:
         return web.json_response(

@@ -2,7 +2,7 @@
 .DS_Store
 .idea/
 venv/
-venv_dev/
+dev_venv/
 data/database/app.db
 
 # Byte-compiled / optimized / DLL files
