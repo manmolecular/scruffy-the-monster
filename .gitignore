@@ -3,6 +3,7 @@
 .idea/
 venv/
 dev_venv/
+venv_dev/
 data/database/app.db
 
 # Byte-compiled / optimized / DLL files
