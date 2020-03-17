@@ -3,6 +3,7 @@
 .idea/
 venv/
 venv_dev/
+app.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

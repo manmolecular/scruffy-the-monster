@@ -1,0 +1,146 @@
+swagger: "2.0"
+info:
+  title: Scruffy The Monster
+  description: >-
+    Hello, stranger! You need to defeat that scary monster or he will eats you!
+    Hit him as hard as you can!
+  version: 1.0.0
+  contact:
+    name: Anton Nikolaev
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: /
+schemes:
+  - http
+components: null
+paths:
+  /register:
+    post:
+      summary: Registration
+      description: This endpoint allows you to register in this game
+      operationId: scruffy.register
+      tags:
+        - User Management
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The user to create.
+          required: true
+          schema:
+            $ref: "#/definitions/Register"
+      responses:
+        '200':
+          description: successful registration or information about error
+  /login:
+    post:
+      summary: Login
+      description: >-
+        This endpoint allows you to login into this game. You need to be
+        registered first.
+      operationId: scruffy.login
+      tags:
+        - User Management
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The user to create.
+          required: true
+          schema:
+            $ref: "#/definitions/Login"
+      responses:
+        '200':
+          description: successful login or information about error
+  /monster:
+    get:
+      summary: Find your own monster
+      description: This endpoint allows you to find monster
+      operationId: scruffy.monster
+      tags:
+        - Action
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: your current game monster
+  /status:
+    get:
+      summary: Get health status
+      description: This endpoint returns your current stats
+      operationId: scruffy.status
+      tags:
+        - Action
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: your current game stats
+  /flush:
+    get:
+      summary: Clean up your temporary information
+      description: This endpoint allows you clear your temp information from memory
+      operationId: scruffy.flush
+      tags:
+        - User Management
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful clean-up
+  /logout:
+    get:
+      summary: Logout
+      description: This endpoint logs you out of this game
+      operationId: scruffy.logout
+      tags:
+        - User Management
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful logout
+  /hit:
+    get:
+      summary: Hit your monster!
+      description: This endpoint allows you to hit your monster!
+      operationId: scruffy.hit
+      tags:
+        - Action
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: you successfully hit your monster
+  /:
+    get:
+      summary: Documentation
+      description: This endpoint just redirects you to documentation
+      operationId: scruffy.documentation
+      tags:
+        - Documentation
+      produces:
+        - text/plain
+      responses:
+        '200':
+          description: successful operation
+
+definitions:
+  Register:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  Login:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string

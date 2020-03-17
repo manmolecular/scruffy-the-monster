@@ -33,17 +33,6 @@ class AuthorizationPolicy(AbstractAuthorizationPolicy):
 
 @routes.post("/register")
 async def register(request):
-    """
-    ---
-    description: This endpoint allows you to register in this game.
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: successful registration or information about error
-    """
     try:
         data = await request.json()
     except JSONDecodeError as invalid_json:
@@ -54,7 +43,7 @@ async def register(request):
     try:
         user_schema = schemas.UserCreate(**data)
     except Exception as invalid_schema:
-        return web.json_response({"status": "error", "msg": "Invalid user schema"})
+        return web.json_response({"status": "error", "msg": "Username and password must be between 5 and 10 chars"})
 
     try:
         return web.json_response(crud.create_user(user_schema))
@@ -64,17 +53,6 @@ async def register(request):
 
 @routes.post("/login")
 async def login(request):
-    """
-    ---
-    description: This endpoint allows you to login into this game. You need to be registered first.
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: successful login or information about error
-    """
     try:
         data = await request.json()
     except JSONDecodeError as invalid_json:
@@ -106,17 +84,6 @@ async def login(request):
 
 @routes.get("/monster", allow_head=False)
 async def get_monster(request):
-    """
-    ---
-    description: This endpoint creates monster for you
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: your current game monster
-    """
     user_id = await check_authorized(request)
     if not user_id:
         return web.json_response({"status": "error", "msg": "Not authorized"})
@@ -129,17 +96,6 @@ async def get_monster(request):
 
 @routes.get("/status", allow_head=False)
 async def status(request):
-    """
-    ---
-    description: This endpoint returns your current stats
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: your current game stats
-    """
     user_id = await check_authorized(request)
     if not user_id:
         return web.json_response({"status": "error", "msg": "You are not authorized"})
@@ -156,17 +112,6 @@ async def status(request):
 
 @routes.get("/flush", allow_head=False)
 async def flush(request):
-    """
-    ---
-    description: This endpoint allows you clear your temp information from memory
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: successful clean-up
-    """
     user_id = await check_authorized(request)
     if not user_id:
         return web.json_response({"status": "error", "msg": "You are not authorized"})
@@ -175,43 +120,21 @@ async def flush(request):
         del MONSTERS[crud.get_monster_id(user_id)]
     except Exception as del_err:
         return web.json_response({"status": "error", "msg": "Can not clean-up after your monster... Or after you"})
+    return web.json_response({"status": "success", "msg": "Your temporary information cleaned-up"})
 
 
 @routes.get("/logout", allow_head=False)
 async def logout(request):
-    """
-    ---
-    description: This endpoint logs you out of this game
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: successful logout
-    """
     await flush(request)
-    redirect_response = web.HTTPFound("/")
     try:
-        await forget(request, redirect_response)
+        await forget(request, web.HTTPFound("/"))
     except Exception as forget_user_err:
         return web.json_response({"status": "error", "msg": "This user is unforgetable... No, really. Can not logout"})
-    raise redirect_response
+    raise web.json_response({"status": "success", "msg": "You are logged out"})
 
 
 @routes.get("/hit", allow_head=False)
 async def hit(request):
-    """
-    ---
-    description: This endpoint allows you to hit your monster!
-    tags:
-    - Action
-    produces:
-    - application/json
-    responses:
-        "200":
-            description: you successfully hit your monster
-    """
     user_id = await check_authorized(request)
     if not user_id:
         return web.json_response({"status": "error", "msg": "You are not authorized"})
@@ -262,17 +185,6 @@ async def hit(request):
 
 @routes.get("/", allow_head=False)
 async def main(request):
-    """
-    ---
-    description: This endpoint just redirects you to documentation
-    tags:
-    - Documentation
-    produces:
-    - text/plain
-    responses:
-        "200":
-            description: successful operation
-    """
     raise web.HTTPFound("/doc")
 
 
@@ -287,14 +199,9 @@ async def make_app():
 
     setup_swagger(
         app,
-        description="Hello, stranger! "
-                    "You need to defeat that scary monster or he will eats you! "
-                    "Hit him as hard as you can!",
-        title="Scruffy The Monster",
-        api_version="1.0.0",
-        contact="",
+        swagger_from_file="swagger.yaml",
         swagger_url="/doc",
-        ui_version=1,
+        ui_version=3,
     )
 
     return app
