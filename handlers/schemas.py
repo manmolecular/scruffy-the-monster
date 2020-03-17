@@ -1,22 +1,22 @@
 from pydantic import BaseModel, Field
 from typing import List
 
-from defaults import UserDefaults, MonsterDefaults
+from config.defaults import UserDefaults, MonsterDefaults
 
 
 class UserBase(BaseModel):
-    username: str = Field(..., max_length=10)
+    username: str = Field(..., min_length=5, max_length=10)
     health: int = Field(UserDefaults.HEALTH, ge=0, le=100)
     strength: int = Field(UserDefaults.STRENGTH, ge=0, le=20)
     hits: int = Field(UserDefaults.HITS, ge=0, le=5)
 
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(..., min_length=5, max_length=10)
 
 
 class UserLogin(UserBase):
-    password: str
+    password: str = Field(..., min_length=5, max_length=10)
 
 
 class MonsterBase(BaseModel):

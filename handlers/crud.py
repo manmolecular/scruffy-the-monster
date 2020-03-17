@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from database import SessionLocal
+from db.database import SessionLocal
 from typing import AnyStr
 
-import models
-import schemas
+from db import models
+from handlers import schemas
 
 
 def create_user(user: schemas.UserCreate, session: Session = SessionLocal()):
