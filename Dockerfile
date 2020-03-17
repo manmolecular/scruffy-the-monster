@@ -5,8 +5,7 @@ LABEL org.label-schema.name="Scruffy The Monster" \
       org.label-schema.license="GPL-2.0"
 
 COPY . /app/
-RUN apk add --no-cache gcc musl-dev
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN apk add --no-cache gcc musl-dev && pip install --no-cache-dir -r /app/requirements.txt
 
 WORKDIR /app
 ENV PYTHONPATH="/app"

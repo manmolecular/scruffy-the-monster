@@ -1,0 +1,8 @@
+*
+.*
+!data/swagger
+!db
+!config
+!handlers
+!requirements.txt
+!server.py
