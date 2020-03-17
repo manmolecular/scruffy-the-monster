@@ -1,7 +1,7 @@
 Scruffy-The-Monster
 ===================
 
-Test Game-Application to Show Race Condition in Action
+🐶Test Game-Application to Show Race Condition in Action
 
 Requirements
 ------------
