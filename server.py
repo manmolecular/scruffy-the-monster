@@ -159,7 +159,7 @@ async def flush(request):
         return web.json_response(
             {
                 "status": "error",
-                "msg": "Can not clean-up after your monster... Or after you",
+                "msg": "Can not find records about you or your monster",
             }
         )
     return web.json_response(
@@ -179,7 +179,7 @@ async def logout(request):
                 "msg": "This user is unforgetable... No, really. Can not logout",
             }
         )
-    raise web.json_response({"status": "success", "msg": "You are logged out"})
+    return web.json_response({"status": "success", "msg": "You are logged out"})
 
 
 @routes.get("/hit", allow_head=False)
