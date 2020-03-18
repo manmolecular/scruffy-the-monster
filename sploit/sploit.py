@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 from json import dumps
 from asyncio_pool import AioPool
-from random import randrange, choice
+from random import randrange
 
 
 _session = None
@@ -13,13 +13,18 @@ _session = None
 async def get_session():
     global _session
     if _session is None:
-        _session = aiohttp.ClientSession()
+        # https://github.com/aio-libs/aiohttp/issues/1183
+        _session = aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar(unsafe=True))
     return _session
 
 
+class DefaultProxy:
+    PROXY = "http://127.0.0.1:8080"
+
+
 class DefaultValues:
-    HOST = "localhost"
-    PORT = 9000
+    HOST = "127.0.0.1"
+    PORT = 9001
     USERNAME = "test"
     PASSWORD = USERNAME
     POOL_SIZE = 10
