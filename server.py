@@ -26,7 +26,10 @@ USERS = {}
 
 class AuthorizationPolicy(AbstractAuthorizationPolicy):
     async def authorized_userid(self, identity):
-        return crud.get_user_id(username=identity)
+        try:
+            return crud.get_user_id(username=identity)
+        except:
+            return False
 
     async def permits(self, identity, permission, context=None):
         pass
