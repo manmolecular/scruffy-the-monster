@@ -172,8 +172,11 @@ async def flush(request):
 
 @routes.get("/logout", allow_head=False)
 async def logout(request):
-    await flush(request)
+    user_id = await check_authorized(request)
+    if not user_id:
+        return web.json_response({"status": "error", "msg": "You are not authorized"})
     try:
+        await flush(request)
         await forget(request, web.HTTPFound("/"))
     except Exception as forget_user_err:
         return web.json_response(
