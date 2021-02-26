@@ -6,7 +6,7 @@ authors = ["Anton Nikolaev"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aiohttp = "3.6.2"
+aiohttp = "3.7.4"
 aiohttp-security = "0.4.0"
 aiohttp-session = "2.9.0"
 aiohttp-swagger = "1.0.14"
